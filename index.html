@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CrissCorss</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <nav>
+      <h1>Tic-tac-toe Game</h1>
+    </nav>
+    <svg class="line visibility">
+      <path
+        style="stroke: #f2ebd3; stroke-width: 10"
+        d=""
+        class="sukIXTzj_0"
+      ></path>
+      <style data-made-with="vivus-instant">
+        .sukIXTzj_0 {
+          stroke-dasharray: 849 851;
+          stroke-dashoffset: 850;
+          animation: sukIXTzj_draw 1s linear 0ms forwards;
+        }
+        @keyframes sukIXTzj_draw {
+          100% {
+            stroke-dashoffset: 0;
+          }
+        }
+        @keyframes sukIXTzj_fade {
+          0% {
+            stroke-opacity: 1;
+          }
+          93.54838709677419% {
+            stroke-opacity: 1;
+          }
+          100% {
+            stroke-opacity: 0;
+          }
+        }
+      </style>
+    </svg>
+    <div class="player">
+      <div class="turn Xtime">
+        <i class="fas fa-times"></i>
+        <p class="counter">-</p>
+      </div>
+      <div class="turn Otime">
+        <i class="far fa-circle"></i>
+        <p class="counter">-</p>
+      </div>
+    </div>
+    <div class="game">
+      <ul class="row1">
+        <li class="col1"></li>
+        <li class="col2"></li>
+        <li class="col3"></li>
+      </ul>
+      <ul class="row2">
+        <li class="col1"></li>
+        <li class="col2"></li>
+        <li class="col3"></li>
+      </ul>
+      <ul class="row3">
+        <li class="col1"></li>
+        <li class="col2"></li>
+        <li class="col3"></li>
+      </ul>
+    </div>
+    <section class="finish visibility">
+      <div class="end-game">
+        <div class="restart">
+          <i class="fas fa-redo-alt"></i>
+        </div>
+        <div class="draw visibility">
+          <ul>
+            <li><i class="fas fa-times cross"></i></li>
+            <li><i class="far fa-circle circle"></i></li>
+          </ul>
+          <h2>DRAW!</h2>
+        </div>
+        <div class="win visibility">
+          <ul>
+            <li class="winList"></li>
+          </ul>
+          <h2>WINNER!</h2>
+        </div>
+      </div>
+    </section>
+    <script type="text/javascript" src="./game.js"></script>
+  </body>
+</html>
