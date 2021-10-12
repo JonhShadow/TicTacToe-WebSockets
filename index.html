@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CrissCorss</title>
     <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./loading-icon.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -54,7 +55,30 @@
         }
       </style>
     </svg>
-    <div class="player">
+    <div class="roomCreation">
+      <form>
+      <div class="userNameInput">
+        <label for="userInput"
+          ><i class="fas fa-user"></i>Choose a username</label
+        >
+        <input type="text" id="userInput" title="Choose a user name" placeholder="Ex. Ana" autocomplete="off" required />
+      </div>
+      <div class="roomNameInput">
+        <label for="roomInput"
+          ><i class="fas fa-dice-d6"></i>Choose a room name</label
+        >
+        <input type="text" id="roomInput" title="Choose a room name to create or to connect" placeholder="Ex. BestRoomEver" autocomplete="off" required />
+      </div>
+      <div class="roomCreationBtn">
+        <button type="submit">Go to room<i class="fas fa-dice-d6"></i> <img src="./Pulse-1s-200px.svg" alt=""></button>
+          <!--<div class="spinner"></div>-->
+          <!--<i class="fas fa-dice-d6"></i>-->
+      </div>
+      <div class="log">
+      </div>
+    </div>
+  </form>
+    <div class="player visibility">
       <div class="turn Xtime">
         <i class="fas fa-times"></i>
         <p class="counter">-</p>
@@ -64,7 +88,7 @@
         <p class="counter">-</p>
       </div>
     </div>
-    <div class="game">
+    <div class="game visibility">
       <ul class="row1">
         <li class="col1"></li>
         <li class="col2"></li>
@@ -102,5 +126,6 @@
       </div>
     </section>
     <script type="text/javascript" src="./game.js"></script>
+    <script type="text/javascript" src="./client.js"></script>
   </body>
 </html>

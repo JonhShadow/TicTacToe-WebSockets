@@ -19,6 +19,7 @@ body {
   color: var(--Ccolor);
   font-family: "Lato", sans-serif;
   min-height: 100vh;
+  margin: 0;
 }
 
 .line {
@@ -116,9 +117,6 @@ nav h1 {
   color: var(--Ccolor);
 }
 
-.visibility {
-  display: none;
-}
 .finish {
   transition: all 3 ease;
 }
@@ -224,6 +222,85 @@ nav h1 {
   font-weight: bold;
 }
 
+.visibility {
+  display: none;
+}
+
+.roomCreation {
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
+
+.roomCreation div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.roomCreation div label,
+.roomCreation div input,
+.roomCreation div button {
+  font-size: 2.4rem;
+  margin: 0.5rem;
+}
+
+.roomCreation div i {
+  color: var(--Xcolor);
+  margin-right: 1rem;
+}
+
+.roomCreation div button,
+.roomCreation div input {
+  padding: 0.6rem;
+  border: none;
+  border-radius: 0.5rem;
+  outline: none;
+  transition: box-shadow 0.6s ease;
+  color: var(--Xcolor);
+}
+.roomCreation div input:hover,
+.roomCreation div input:focus {
+  box-shadow: 0px -0.34rem 0px var(--Xcolor) inset;
+}
+
+.roomCreation div button {
+  margin-top: 2rem;
+  padding: 1rem;
+  width: 30rem;
+  cursor: pointer;
+  background-color: var(--Xcolor);
+  color: var(--Ccolor);
+}
+.roomCreation div button i {
+  color: var(--Ccolor);
+  margin-left: 1rem;
+}
+
+.roomCreation div button:hover {
+  box-shadow: 0px -0.34rem 0px var(--Ccolor) inset;
+}
+.roomCreation div button[disabled]:hover {
+  box-shadow: none;
+}
+.roomCreationBtn button {
+  text-align: center;
+  align-self: center;
+  justify-content: center;
+}
+.roomCreationBtn button img {
+  margin: 0;
+  padding: 0;
+  width: 3rem;
+  float: right;
+  opacity: 0;
+}
+
+.log p {
+  font-size: 2rem;
+  margin: 0.5rem;
+}
 @media only screen and (max-width: 1600px) {
   .end-game .restart {
     left: 40rem;
