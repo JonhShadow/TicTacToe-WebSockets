@@ -29,6 +29,7 @@ wss.on("connection", (ws, rep) => {
 
     console.log("New Client:" + ws.name);
     if (!rooms[ws.room]) {
+      ws.piece = "x";
       let newRoom = new Room(ws);
       rooms[ws.room] = newRoom;
       console.log(
@@ -46,6 +47,7 @@ wss.on("connection", (ws, rep) => {
         );
       });
     } else {
+      ws.piece = "o";
       let feedback = rooms[ws.room].addP2(ws);
       if (feedback["status"] == 200) {
         rooms[ws.room].players.forEach(function each(client) {
@@ -55,7 +57,21 @@ wss.on("connection", (ws, rep) => {
               data: rooms[client.room].getGameStatus(),
             })
           );
+          let opponetDetails = rooms[client.room].getOpponetDetails(client);
+          client.send(
+            JSON.stringify({
+              status: "opponetDetails",
+              data: opponetDetails,
+            })
+          );
         });
+      } else if (feedback["status"] == 400) {
+        ws.send(
+          JSON.stringify({
+            status: 400,
+            data: feedback["data"],
+          })
+        );
       }
     }
   });

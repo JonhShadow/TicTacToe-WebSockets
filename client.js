@@ -1,3 +1,6 @@
+const playersDiv = document.querySelector(".player");
+const roomCreation = document.querySelector(".roomCreation");
+
 const createRoomBtn = document.querySelector(
   ".roomCreation .roomCreationBtn button"
 );
@@ -53,9 +56,35 @@ function socketConnect(user) {
         newLog = "<p>" + data["data"] + "</p>";
         log.innerHTML += newLog;
       }
+      if (data["data"] == "Wait for game to start!") {
+        roomCreation.classList.add("visibility");
+        game.classList.remove("visibility");
+        playersDiv.classList.remove("visibility");
+        game.addEventListener("click", play);
+      }
+      if (data["status"] == "opponetDetails") {
+        console.log(data["data"]);
+        playerInfo(data["data"], user["name"]);
+      }
     });
     ws.send(JSON.stringify(user));
   };
+}
+
+function playerInfo({ name, piece }, username) {
+  if (piece == "x") {
+    const X = document.querySelector(".Xtime .user");
+    X.innerText = name;
+
+    const O = document.querySelector(".Otime .user");
+    O.innerText = username;
+  } else {
+    const O = document.querySelector(".Otime .user");
+    O.innerText = name;
+
+    const X = document.querySelector(".Xtime .user");
+    X.innerText = username;
+  }
 }
 /*
 ws.addEventListener("open", () => {

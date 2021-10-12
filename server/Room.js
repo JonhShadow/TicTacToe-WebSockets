@@ -25,6 +25,18 @@ class Room {
     return { status: 400, data: "Something went wrong" };
   }
 
+  getOpponetDetails(player) {
+    let p = {};
+    if (this.players[0].id == player.id) {
+      p["name"] = this.players[1].name;
+      p["piece"] = this.players[1].piece;
+    } else {
+      p["name"] = this.players[0].name;
+      p["piece"] = this.players[0].piece;
+    }
+    return p;
+  }
+
   getGameStatus() {
     return this.gameStatus;
   }
