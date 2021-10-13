@@ -1,7 +1,7 @@
 const Room = require("./Room.js");
 
 const WebSocket = require("ws");
-const wss = new WebSocket.Server({ port: 8082 });
+const wss = new WebSocket.Server({ port: process.env.PORT || 8082 });
 
 let rooms = {};
 
