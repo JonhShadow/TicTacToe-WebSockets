@@ -49,7 +49,7 @@ createRoomBtn.addEventListener("click", (e) => {
 
 function socketConnect(user) {
   let mySelf;
-  const ws = new WebSocket("ws://localhost:8082"); // wss for production
+  const ws = new WebSocket("ws://tictactoe-ws-backend.herokuapp.com/"); // wss for production
   ws.onopen = function () {
     ws.addEventListener("message", ({ data }) => {
       data = JSON.parse(data);
