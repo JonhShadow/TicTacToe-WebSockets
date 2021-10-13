@@ -1,6 +1,7 @@
 const playersDiv = document.querySelectorAll(".player");
 const playerLog = document.querySelector(".player .log");
 const roomCreation = document.querySelector(".roomCreation");
+const loading = document.querySelector(".roomCreationBtn button img");
 
 const createRoomBtn = document.querySelector(
   ".roomCreation .roomCreationBtn button"
@@ -17,7 +18,6 @@ const log = document.querySelector(".log");
 
 createRoomBtn.addEventListener("click", (e) => {
   e.preventDefault();
-  const loading = document.querySelector(".roomCreationBtn button img");
 
   const validityStateUserName = createRoomUserName.validity;
   const validityStateName = createRoomName.validity;
@@ -57,6 +57,12 @@ function socketConnect(user) {
       if (data["status"] != 100) {
         newLog = "<p>" + data["data"] + "</p>";
         log.innerHTML += newLog;
+        if (data["status"] == 400) {
+          createRoomName.value = "";
+          createRoomBtn.disabled = false;
+          createRoomBtn.style.cursor = "pointer";
+          loading.style.opacity = 0;
+        }
       }
       if (data["data"] == "Wait for game to start!") {
         roomCreation.classList.add("visibility");
