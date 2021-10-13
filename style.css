@@ -30,7 +30,7 @@ body {
   right: 0;
   width: 60rem;
   height: 60rem;
-  margin-top: 9rem;
+  margin-top: 13rem;
   z-index: 1;
   pointer-events: none;
 }
@@ -222,6 +222,14 @@ nav h1 {
   font-weight: bold;
 }
 
+.player .log {
+  color: var(--Xcolor);
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+  margin-bottom: 1.1rem;
+}
+
 .visibility {
   display: none;
 }
@@ -259,6 +267,11 @@ nav h1 {
   outline: none;
   transition: box-shadow 0.6s ease;
   color: var(--Xcolor);
+}
+
+.roomCreation div input::placeholder {
+  color: #7572729c;
+  font-size: 2rem;
 }
 .roomCreation div input:hover,
 .roomCreation div input:focus {

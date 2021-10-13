@@ -1,4 +1,5 @@
-const playersDiv = document.querySelector(".player");
+const playersDiv = document.querySelectorAll(".player");
+const playerLog = document.querySelector(".player .log");
 const roomCreation = document.querySelector(".roomCreation");
 
 const createRoomBtn = document.querySelector(
@@ -47,6 +48,7 @@ createRoomBtn.addEventListener("click", (e) => {
 });
 
 function socketConnect(user) {
+  let mySelf;
   const ws = new WebSocket("ws://localhost:8082"); // wss for production
   ws.onopen = function () {
     ws.addEventListener("message", ({ data }) => {
@@ -59,12 +61,63 @@ function socketConnect(user) {
       if (data["data"] == "Wait for game to start!") {
         roomCreation.classList.add("visibility");
         game.classList.remove("visibility");
-        playersDiv.classList.remove("visibility");
-        game.addEventListener("click", play);
+        playersDiv.forEach(function each(div) {
+          div.classList.remove("visibility");
+        });
+        cleanBoard();
+        game.addEventListener("click", function (e) {
+          play(e, ws, mySelf["piece"]);
+        });
+        restartButton.addEventListener("click", function (e) {
+          restartGame(e, ws);
+        });
+        if (mySelf["piece"] == "x") {
+          game.style.pointerEvents = "initial";
+          playerLog.innerText = "My turn!";
+          console.log("My turn");
+          Xturn.style.borderColor = "rgb(82, 85, 83)";
+          Oturn.style.borderColor = "#f2ebd3";
+        } else {
+          game.style.pointerEvents = "none";
+          console.log("Opponent turn");
+          playerLog.innerText = "Opponent turn!";
+          Xturn.style.borderColor = "rgb(82, 85, 83)";
+          Oturn.style.borderColor = "#f2ebd3";
+        }
       }
       if (data["status"] == "opponetDetails") {
         console.log(data["data"]);
-        playerInfo(data["data"], user["name"]);
+        mySelf = playerInfo(data["data"], user["name"]); // return info about myself
+      }
+      if (data["status"] == "move") {
+        moveTo = "." + data["place"][0] + " ." + data["place"][1] + "";
+        document.querySelector(moveTo).innerHTML = data["piece"];
+        setTimeout(checkWin, 100);
+
+        game.style.pointerEvents = "initial";
+        console.log("My turn");
+        playerLog.innerText = "My turn!";
+
+        if (mySelf["piece"] == "x") {
+          Xturn.style.borderColor = "rgb(82, 85, 83)";
+          Oturn.style.borderColor = "#f2ebd3";
+        } else {
+          Xturn.style.borderColor = "#f2ebd3";
+          Oturn.style.borderColor = "rgb(82, 85, 83)";
+        }
+      }
+      if (data["status"] == "restart") {
+        console.log(data);
+        game.style.pointerEvents = turnState;
+        if (game.style.pointerEvents == "initial") {
+          playerLog.innerText = "My turn!";
+        } else {
+          playerLog.innerText = "Opponent turn!";
+        }
+      }
+      if (data["status"] == "disconecting") {
+        playerLog.innerText = data["data"];
+        game.style.pointerEvents = "none";
       }
     });
     ws.send(JSON.stringify(user));
@@ -78,12 +131,14 @@ function playerInfo({ name, piece }, username) {
 
     const O = document.querySelector(".Otime .user");
     O.innerText = username;
+    return { name: username, piece: "o" };
   } else {
     const O = document.querySelector(".Otime .user");
     O.innerText = name;
 
     const X = document.querySelector(".Xtime .user");
     X.innerText = username;
+    return { name: username, piece: "x" };
   }
 }
 /*

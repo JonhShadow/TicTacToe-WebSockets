@@ -17,34 +17,50 @@ const circle = '<i class="far fa-circle circle">';
 let p1 = true;
 let p2 = false;
 
-game.addEventListener("click", play);
-restartButton.addEventListener("click", restartGame);
+let turnState;
+
+//game.addEventListener("click", play);
+//restartButton.addEventListener("click", restartGame);
 document.addEventListener("DOMContentLoaded", loadSession);
 
-function play(e) {
+function play(e, ws, piece) {
   e.stopPropagation();
   const click = e.target;
   //console.log(click.children[0]);
-
-  if (p1 == true && p2 == false) {
+  if (piece == "x") {
     if (click.children.length == 0) {
+      game.style.pointerEvents = "none";
       click.innerHTML = cross;
-
-      p1 = false;
+      ws.send(
+        JSON.stringify({
+          status: "move",
+          place: [click.parentNode.classList[0], click.classList[0]],
+          piece: cross,
+        })
+      );
+      console.log("Opponent turn");
+      playerLog.innerText = "Opponent turn!";
+      //p1 = false;
       Xturn.style.borderColor = "#f2ebd3";
-      p2 = true;
+      //p2 = true;
       Oturn.style.borderColor = "rgb(82, 85, 83)";
 
       setTimeout(checkWin, 100);
     }
   } else {
     if (click.children.length == 0) {
+      game.style.pointerEvents = "none";
       e.target.innerHTML = circle;
-
-      p1 = true;
+      ws.send(
+        JSON.stringify({
+          status: "move",
+          place: [click.parentNode.classList[0], click.classList[0]],
+          piece: circle,
+        })
+      );
       Xturn.style.borderColor = "rgb(82, 85, 83)";
-      p2 = false;
       Oturn.style.borderColor = "#f2ebd3";
+      playerLog.innerText = "Opponent turn!";
 
       setTimeout(checkWin, 100);
     }
@@ -60,21 +76,18 @@ function checkWin() {
       if (c1.isEqualNode(c2) && c1.isEqualNode(c3) && c2.isEqualNode(c3)) {
         switch (i) {
           case 0:
-            game.removeEventListener("click", play);
             drawLine(c1.classList, "M100 10L100 580");
             setTimeout(() => {
               isWin(c1.classList);
             }, 2000);
             break;
           case 1:
-            game.removeEventListener("click", play);
             drawLine(c1.classList, "M300 10L300 580");
             setTimeout(() => {
               isWin(c1.classList);
             }, 2000);
             break;
           case 2:
-            game.removeEventListener("click", play);
             drawLine(c1.classList, "M500 10L500 580");
             setTimeout(() => {
               isWin(c1.classList);
@@ -92,21 +105,18 @@ function checkWin() {
       if (r1.isEqualNode(r2) && r1.isEqualNode(r3) && r2.isEqualNode(r3)) {
         switch (i) {
           case 0:
-            game.removeEventListener("click", play);
             drawLine(r1.classList, "M20 90L570 90");
             setTimeout(() => {
               isWin(r1.classList);
             }, 2000);
             break;
           case 1:
-            game.removeEventListener("click", play);
             drawLine(r1.classList, "M20 290L570 290");
             setTimeout(() => {
               isWin(r1.classList);
             }, 2000);
             break;
           case 2:
-            game.removeEventListener("click", play);
             drawLine(r1.classList, "M20 500L570 500");
             setTimeout(() => {
               isWin(r1.classList);
@@ -123,7 +133,6 @@ function checkWin() {
   let d3 = game.children[2].children[2].children[0];
   if (d1 != undefined && d2 != undefined && d3 != undefined) {
     if (d1.isEqualNode(d2) && d1.isEqualNode(d3) && d2.isEqualNode(d3)) {
-      game.removeEventListener("click", play);
       drawLine(d1.classList, "M25,10L580,575");
       setTimeout(() => {
         isWin(d1.classList);
@@ -137,7 +146,6 @@ function checkWin() {
   d3 = game.children[2].children[0].children[0];
   if (d1 != undefined && d2 != undefined && d3 != undefined) {
     if (d1.isEqualNode(d2) && d1.isEqualNode(d3) && d2.isEqualNode(d3)) {
-      game.removeEventListener("click", play);
       drawLine(d1.classList, "M20,575L575,10");
       setTimeout(() => {
         isWin(d1.classList);
@@ -165,22 +173,30 @@ function isWin(winner) {
 
   game.classList.add("visibility");
   cleanBoard();
+  playerLog.innerText = "Let's play again?";
   finishsection.classList.remove("visibility");
   winsection.classList.remove("visibility");
 }
 
-function restartGame(e) {
+function restartGame(e, ws) {
+  ws.send(JSON.stringify({ status: "restart", gameStatus: "restarting" }));
+  playerLog.innerText = "Waiting for your opponent...";
+
+  turnState = game.style.pointerEvents;
+  game.style.pointerEvents = "none";
+  /*
+  if (game.style.pointerEvents == "initial") {
+    playerLog.innerText = "My turn!";
+  } else {
+    playerLog.innerText = "Opponent turn!";
+  }
+  */
   finishsection.classList.add("visibility");
   drawsection.classList.add("visibility");
   winsection.classList.add("visibility");
 
-  p1 = true;
-  Xturn.style.borderColor = "rgb(82, 85, 83)";
-  p2 = false;
-  Oturn.style.borderColor = "#f2ebd3";
-
   game.classList.remove("visibility");
-  game.addEventListener("click", play);
+  //game.addEventListener("click", play);
 }
 
 function boardIsFull() {
@@ -203,6 +219,7 @@ function boardIsFull() {
 }
 
 function isDraw() {
+  playerLog.innerText = "Let's play again?";
   game.classList.add("visibility");
   finishsection.classList.remove("visibility");
   drawsection.classList.remove("visibility");

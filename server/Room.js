@@ -40,8 +40,18 @@ class Room {
   getGameStatus() {
     return this.gameStatus;
   }
+  changeGameStatus(newStatus) {
+    this.gameStatus = newStatus;
+  }
   getRoomName() {
     return this.name;
+  }
+  removePlayer(player) {
+    const index = this.players.indexOf(player);
+    this.players.splice(index, 1);
+  }
+  numberOfPlayers() {
+    return this.players.length;
   }
 }
 module.exports = Room;

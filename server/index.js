@@ -21,35 +21,46 @@ wss.getAllIds = function () {
 };
 
 wss.on("connection", (ws, rep) => {
-  ws.on("message", (data) => {
-    user = JSON.parse(data);
-    ws.id = wss.getUniqueID();
-    ws.name = user.name;
-    ws.room = user.room;
-
-    console.log("New Client:" + ws.name);
-    if (!rooms[ws.room]) {
-      ws.piece = "x";
-      let newRoom = new Room(ws);
-      rooms[ws.room] = newRoom;
-      console.log(
-        "New room[" +
-          rooms[ws.room].getRoomName() +
-          "]: " +
-          newRoom.getGameStatus()
-      );
-      rooms[ws.room].players.forEach(function each(client) {
-        client.send(
-          JSON.stringify({
-            status: 200,
-            data: rooms[client.room].getGameStatus(),
-          })
-        );
-      });
+  ws.on("message", (msg) => {
+    data = JSON.parse(msg);
+    if (data["status"] == "move") {
+      console.log(data);
+      if (rooms[ws.room].players[0] == ws) {
+        rooms[ws.room].players[1].send(JSON.stringify(data));
+      } else {
+        rooms[ws.room].players[0].send(JSON.stringify(data));
+      }
+    } else if (data["status"] == "restart") {
+      console.log(data);
+      if (rooms[ws.room].gameStatus == data["gameStatus"]) {
+        rooms[ws.room].players.forEach(function each(client) {
+          client.send(
+            JSON.stringify({
+              status: "restart",
+              data: rooms[client.room].getGameStatus(),
+            })
+          );
+        });
+      } else {
+        rooms[ws.room].changeGameStatus(data["gameStatus"]);
+      }
     } else {
-      ws.piece = "o";
-      let feedback = rooms[ws.room].addP2(ws);
-      if (feedback["status"] == 200) {
+      user = data;
+      ws.id = wss.getUniqueID();
+      ws.name = user.name;
+      ws.room = user.room;
+
+      console.log("New Client:" + ws.name);
+      if (!rooms[ws.room]) {
+        ws.piece = "x";
+        let newRoom = new Room(ws);
+        rooms[ws.room] = newRoom;
+        console.log(
+          "New room[" +
+            rooms[ws.room].getRoomName() +
+            "]: " +
+            newRoom.getGameStatus()
+        );
         rooms[ws.room].players.forEach(function each(client) {
           client.send(
             JSON.stringify({
@@ -57,26 +68,54 @@ wss.on("connection", (ws, rep) => {
               data: rooms[client.room].getGameStatus(),
             })
           );
-          let opponetDetails = rooms[client.room].getOpponetDetails(client);
-          client.send(
+        });
+      } else {
+        ws.piece = "o";
+        let feedback = rooms[ws.room].addP2(ws);
+        if (feedback["status"] == 200) {
+          rooms[ws.room].players.forEach(function each(client) {
+            let opponetDetails = rooms[client.room].getOpponetDetails(client);
+            client.send(
+              JSON.stringify({
+                status: "opponetDetails",
+                data: opponetDetails,
+              })
+            );
+            client.send(
+              JSON.stringify({
+                status: 200,
+                data: rooms[client.room].getGameStatus(),
+              })
+            );
+          });
+        } else if (feedback["status"] == 400) {
+          ws.send(
             JSON.stringify({
-              status: "opponetDetails",
-              data: opponetDetails,
+              status: 400,
+              data: feedback["data"],
             })
           );
-        });
-      } else if (feedback["status"] == 400) {
-        ws.send(
-          JSON.stringify({
-            status: 400,
-            data: feedback["data"],
-          })
-        );
+        }
       }
     }
   });
 
   ws.on("close", () => {
-    console.log("Connection closed!");
+    console.log(ws.name + "-> connection closed!");
+    rooms[ws.room].removePlayer(ws);
+    rooms[ws.room].changeGameStatus("opponent left");
+    rooms[ws.room].players.forEach(function each(client) {
+      client.send(
+        JSON.stringify({
+          status: "disconecting",
+          data: rooms[client.room].getGameStatus(),
+        })
+      );
+    });
+
+    if (rooms[ws.room].numberOfPlayers() == 0) {
+      console.log(ws.room + " was deleted");
+      delete rooms[ws.room];
+    }
   });
 });
