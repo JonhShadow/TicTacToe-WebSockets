@@ -103,7 +103,7 @@ wss.on("connection", (ws, rep) => {
   ws.on("close", () => {
     console.log(ws.name + "-> connection closed!");
     rooms[ws.room].removePlayer(ws);
-    rooms[ws.room].changeGameStatus("opponent left");
+    rooms[ws.room].changeGameStatus("Your opponent left!");
     rooms[ws.room].players.forEach(function each(client) {
       client.send(
         JSON.stringify({
@@ -113,6 +113,7 @@ wss.on("connection", (ws, rep) => {
       );
     });
 
+    console.log("[" + ws.room + "] -> " + rooms[ws.room].numberOfPlayers());
     if (rooms[ws.room].numberOfPlayers() == 0) {
       console.log(ws.room + " was deleted");
       delete rooms[ws.room];
