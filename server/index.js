@@ -33,6 +33,7 @@ wss.on("connection", (ws, rep) => {
     } else if (data["status"] == "restart") {
       console.log(data);
       if (rooms[ws.room].gameStatus == data["gameStatus"]) {
+        rooms[ws.room].changeGameStatus("Starting");
         rooms[ws.room].players.forEach(function each(client) {
           client.send(
             JSON.stringify({
