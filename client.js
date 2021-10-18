@@ -50,6 +50,7 @@ createRoomBtn.addEventListener("click", (e) => {
 function socketConnect(user) {
   let mySelf;
   const ws = new WebSocket("wss://tictactoe-ws-backend.herokuapp.com/"); // wss for production
+  //const ws = new WebSocket("wss://localhost.com:8082"); // wss for development
   ws.onerror = function (e) {
     newLog = "<p>The server is not running properly. Try again later.</p>";
     log.innerHTML = newLog;
