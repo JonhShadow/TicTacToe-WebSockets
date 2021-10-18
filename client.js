@@ -50,6 +50,13 @@ createRoomBtn.addEventListener("click", (e) => {
 function socketConnect(user) {
   let mySelf;
   const ws = new WebSocket("wss://tictactoe-ws-backend.herokuapp.com/"); // wss for production
+  ws.onerror = function (e) {
+    newLog = "<p>The server is not running properly. Try again later.</p>";
+    log.innerHTML = newLog;
+    createRoomBtn.disabled = false;
+    createRoomBtn.style.cursor = "pointer";
+    loading.style.opacity = 0;
+  };
   ws.onopen = function () {
     ws.addEventListener("message", ({ data }) => {
       data = JSON.parse(data);
